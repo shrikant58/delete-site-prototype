@@ -1,10 +1,529 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Delete Site Prototype</title>
+<meta charset="UTF-8">
+<title>Delete Site Prototype</title>
+
+<style>
+body{
+font-family:Segoe UI,Arial,sans-serif;
+background:#f5f6f8;
+margin:0;
+}
+
+.header{
+background:#0f62fe;
+color:white;
+padding:15px 25px;
+font-size:22px;
+font-weight:bold;
+}
+
+.container{
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:6px;
+box-shadow:0 2px 6px rgba(0,0,0,.15);
+max-width:900px;
+margin:auto;
+}
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+font-weight:600;
+}
+
+.primary{
+background:#0f62fe;
+color:white;
+}
+
+.secondary{
+background:#e4e7eb;
+}
+
+.success{
+background:#24a148;
+color:white;
+}
+
+.danger{
+background:#da1e28;
+color:white;
+}
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+justify-content:center;
+align-items:center;
+}
+
+.modal-content{
+background:white;
+width:90%;
+max-width:1100px;
+padding:25px;
+border-radius:6px;
+max-height:85vh;
+overflow:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#e8f0ff;
+text-align:left;
+padding:10px;
+border:1px solid #ddd;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+}
+
+.banner{
+background:#fff4ce;
+padding:12px;
+border-left:5px solid #ffb900;
+margin-bottom:15px;
+}
+
+.validation{
+color:red;
+font-weight:bold;
+margin-top:12px;
+}
+
+.hidden{
+display:none;
+}
+
+.action-bar{
+margin-top:20px;
+display:flex;
+gap:10px;
+justify-content:flex-end;
+}
+
+.tag{
+background:#d0e2ff;
+padding:4px 10px;
+border-radius:12px;
+font-size:12px;
+}
+</style>
 </head>
-<body style="font-family: Arial; padding: 40px;">
-    <h1>Delete Site Prototype</h1>
-    <p>GitHub Pages is working successfully.</p>
+
+<body>
+
+<div class="header">
+Delete Site Prototype
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Site Management</h2>
+
+<p><b>Development:</b> Imperial Park</p>
+<p><b>Site:</b> Imperial Park - Phase A</p>
+<p><b>Status:</b> Open</p>
+<p><b>Associated Cases:</b> 10</p>
+
+<br>
+
+<button class="danger" onclick="openCasesModal()">
+Delete Site
+</button>
+
+</div>
+
+</div>
+
+<!-- CASES MODAL -->
+
+<div class="modal" id="casesModal">
+
+<div class="modal-content">
+
+<h2>Delete Site - Impacted Cases</h2>
+
+<div class="banner">
+This Site cannot be deleted until all impacted cases have been Assigned or Unassigned.
+</div>
+
+<label><b>Postcode District Filter:</b></label>
+
+<select id="districtFilter" onchange="filterCases()">
+<option value="ALL">All</option>
+<option value="CW8">CW8</option>
+<option value="CW9">CW9</option>
+<option value="CW10">CW10</option>
+</select>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="selectAll" disabled onchange="selectAllCases()">
+Select All
+</label>
+
+<div class="validation" id="validation"></div>
+
+<table id="caseTable">
+
+<thead>
+<tr>
+<th></th>
+<th>Case Reference</th>
+<th>Address</th>
+<th>Postcode</th>
+<th>District</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr data-district="CW8">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW8')"></td>
+<td>NB1001</td>
+<td>1 High Street</td>
+<td>CW8 1AA</td>
+<td>CW8</td>
+</tr>
+
+<tr data-district="CW8">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW8')"></td>
+<td>NB1002</td>
+<td>4 High Street</td>
+<td>CW8 3AB</td>
+<td>CW8</td>
+</tr>
+
+<tr data-district="CW8">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW8')"></td>
+<td>NB1003</td>
+<td>9 Church Road</td>
+<td>CW8 4AD</td>
+<td>CW8</td>
+</tr>
+
+<tr data-district="CW9">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW9')"></td>
+<td>NB1004</td>
+<td>7 King Street</td>
+<td>CW9 2TT</td>
+<td>CW9</td>
+</tr>
+
+<tr data-district="CW9">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW9')"></td>
+<td>NB1005</td>
+<td>10 King Street</td>
+<td>CW9 8YY</td>
+<td>CW9</td>
+</tr>
+
+<tr data-district="CW9">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW9')"></td>
+<td>NB1006</td>
+<td>22 King Street</td>
+<td>CW9 5QQ</td>
+<td>CW9</td>
+</tr>
+
+<tr data-district="CW10">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW10')"></td>
+<td>NB1007</td>
+<td>11 Main Road</td>
+<td>CW10 6VV</td>
+<td>CW10</td>
+</tr>
+
+<tr data-district="CW10">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW10')"></td>
+<td>NB1008</td>
+<td>18 Main Road</td>
+<td>CW10 7BB</td>
+<td>CW10</td>
+</tr>
+
+<tr data-district="CW10">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW10')"></td>
+<td>NB1009</td>
+<td>20 Main Road</td>
+<td>CW10 4CC</td>
+<td>CW10</td>
+</tr>
+
+<tr data-district="CW10">
+<td><input type="checkbox" class="caseChk" onchange="validateDistrict(this,'CW10')"></td>
+<td>NB1010</td>
+<td>44 Main Road</td>
+<td>CW10 9PP</td>
+<td>CW10</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="action-bar">
+
+<button class="secondary" onclick="closeCasesModal()">
+Cancel
+</button>
+
+<button class="danger" onclick="showUnassignResult()">
+Unassign
+</button>
+
+<button class="primary" onclick="showAssignModal()">
+Assign Site
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ASSIGN MODAL -->
+
+<div class="modal" id="assignModal">
+
+<div class="modal-content">
+
+<h2>Assign Site / Phase</h2>
+
+<p>
+Selected Cases:
+<span class="tag" id="selectedCount">
+0
+</span>
+</p>
+
+<table>
+
+<thead>
+<tr>
+<th>Developer</th>
+<th>Development</th>
+<th>Site Status</th>
+<th>Phase</th>
+<th>Phase Status</th>
+<th>Match Type</th>
+<th>Select</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Barratt</td>
+<td>Oak View</td>
+<td>Open</td>
+<td>Phase 1</td>
+<td>Open</td>
+<td>District</td>
+<td><input type="radio" name="site"></td>
+</tr>
+
+<tr>
+<td>Taylor Wimpey</td>
+<td>Imperial Gardens</td>
+<td>Open</td>
+<td>Phase 2</td>
+<td>Open</td>
+<td>District</td>
+<td><input type="radio" name="site"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="action-bar">
+
+<button class="secondary" onclick="closeAssignModal()">
+Cancel
+</button>
+
+<button class="danger">
+Unassign
+</button>
+
+<button class="success" onclick="showResults()">
+Assign
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let selectedDistrict = null;
+
+function openCasesModal(){
+document.getElementById('casesModal').style.display='flex';
+}
+
+function closeCasesModal(){
+document.getElementById('casesModal').style.display='none';
+}
+
+function validateDistrict(cb,district){
+
+let validation=document.getElementById('validation');
+
+if(cb.checked){
+
+if(selectedDistrict===null){
+selectedDistrict=district;
+}
+
+else if(selectedDistrict!==district){
+cb.checked=false;
+validation.innerHTML=
+'Cases from different postcode districts cannot be selected together.';
+return;
+}
+
+}
+
+let checked=document.querySelectorAll('.caseChk:checked');
+
+if(checked.length===0){
+selectedDistrict=null;
+validation.innerHTML='';
+}
+
+}
+
+function filterCases(){
+
+let value=document.getElementById('districtFilter').value;
+let rows=document.querySelectorAll('#caseTable tbody tr');
+
+rows.forEach(r=>{
+if(value==="ALL"){
+r.style.display='';
+}
+else{
+r.style.display=
+r.dataset.district===value ? '' : 'none';
+}
+});
+
+document.getElementById('selectAll').disabled =
+(value==="ALL");
+
+}
+
+function selectAllCases(){
+
+let selectAll=document.getElementById('selectAll');
+let rows=document.querySelectorAll('#caseTable tbody tr');
+
+rows.forEach(r=>{
+
+if(r.style.display!=='none'){
+
+let chk=r.querySelector('input');
+
+chk.checked=selectAll.checked;
+}
+});
+
+}
+
+function showAssignModal(){
+
+let count=document.querySelectorAll('.caseChk:checked').length;
+
+if(count===0){
+alert('Please select at least one case.');
+return;
+}
+
+document.getElementById('selectedCount').innerHTML=count;
+
+document.getElementById('assignModal').style.display='flex';
+}
+
+function closeAssignModal(){
+document.getElementById('assignModal').style.display='none';
+}
+
+function showResults(){
+
+alert(
+'Assignment Results\n\n' +
+'NB1001 - SUCCESS\n' +
+'NB1002 - SUCCESS\n' +
+'NB1003 - SUCCESS\n' +
+'NB1004 - FAILURE\n\n' +
+'Reason: Case Locked'
+);
+
+document.getElementById('assignModal').style.display='none';
+
+setTimeout(()=>{
+showDeleteConfirmation();
+},300);
+
+}
+
+function showUnassignResult(){
+
+alert(
+'Selected cases successfully unassigned.\n\nCases removed from impacted list.'
+);
+
+showDeleteConfirmation();
+
+}
+
+function showDeleteConfirmation(){
+
+let proceed=confirm(
+'All impacted cases have now been processed.\n\nDelete Site and all associated phases?'
+);
+
+if(proceed){
+
+alert(
+'Site deleted successfully.\n\nExposure metrics recalculated.\nPRH2 updated successfully.'
+);
+
+location.reload();
+}
+
+}
+
+</script>
+
 </body>
 </html>
